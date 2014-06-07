@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="thehelp-client-project">thehelp-client-project</h1>
+
+<p>Developing client-side javascript with <a href="http://requirejs.org/"><code>requirejs</code></a> and testing with (<code>mocha</code>)[http://visionmedia.github.io/mocha/]? This library will help you streamline some of your project automation.</p>
+
+<h2 id="features">Features</h2>
+
+<ul>
+<li><a href="https://github.com/gruntjs/grunt-contrib-connect"><code>connect</code></a> task to support loading your libraries on localhost instead of <code>file:/</code> URLs, which have different security settings</li>
+<li><a href="https://github.com/kmiyashiro/grunt-mocha"><code>grunt-mocha</code></a> to run your <em>client-side</em> <code>mocha</code> tests on the command-line via <a href="http://phantomjs.org/"><code>phantomjs</code></a></li>
+<li><a href="https://github.com/asciidisco/grunt-requirejs"><code>grunt-requirejs</code></a> to concatenate and optimize your [<code>requirejs</code>/AMD-style code into production javascript files.</li>
+<li>Convenience methods to copy files from your <code>bower_components/</code> and node modules' <code>dist/</code> directories</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<p>First, install the project (and its friend, <code>thehelp-project</code>) as dev dependencies:</p>
+
+<pre><code>npm install thehelp-project thehelp-client-project --save-dev
+</code></pre>
+
+<p>If you're new to <a href="https://github.com/thehelp/project"><code>thehelp-project</code></a>, it would be good to read its docs first. Then make sure you have the grunt command available:</p>
+
+<pre><code>npm install -g grunt-cli
+</code></pre>
+
+<h2 id="your-gruntfile">Your Gruntfile</h2>
+
+<p>This is the place to start with your Gruntfile:</p>
+
+<pre><code class="javascript">var GruntConfig = require('thehelp-project').GruntConfig;
+require('thehelp-client-project').mixin(GruntConfig);
+
+module.exports = function(grunt) {
+  var config = new GruntConfig(grunt);
+
+  config.standardSetup();
+  config.standardDefault();
+};
+</code></pre>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="setup">Setup</h3>
+
+<p>Two methods are provided to help set your project up:</p>
+
+<ul>
+<li><code>registerCopyFromBower()</code> - Copies the primary js files from installed bower modules to 'lib/vendor'</li>
+<li><code>registerCopyFromDist()</code> - Copies the contents of node modules' 'dist/' folder to 'lib/vendor'</li>
+</ul>
+
+<p>For example, in your Gruntfile you could do this to create a 'setup' task using both of these:</p>
+
+<pre><code class="javascript">config.registerCopyFromBower();
+config.registerCopyFromDist('thehelp-core', 'thehelp-test');
+grunt.registerTask('setup', 'copy:from-bower', 'copy:from-dist');
+</code></pre>
+
+<h3 id="optimize">Optimize</h3>
+
+<p>Another two methods help simplify your</p>
+
+<ul>
+<li><code>registerOptimize()</code> - Generates a concatenated, optimized based on AMD modules.</li>
+<li><code>registerOptimizeLibrary()</code> - Generates both minified and non-minified concatenated javascript files.Best-suited for generating a library for consumption by others.</li>
+</ul>
+
+<p>This will generate a single, optimized file named 'home.js' under 'dist/js' which does not need <code>requirejs</code> on the page to run:</p>
+
+<pre><code class="javascript">config.registerOptimize({
+  name: 'src/client/home',
+  outName: 'dist/js/home',
+  standalone: true,
+  config: {
+    baseUrl: './',
+    paths: {
+      backbone: 'lib/vendor/backbone',
+      underscore: 'lib/vendor/underscore'
+    }
+  }
+})
+</code></pre>
+
+<p>For more information on requirejs configuration:</p>
+
+<ul>
+<li><a href="http://requirejs.org/docs/optimization.html"><code>requirejs</code> optimization documentation</a></li>
+<li><a href="https://github.com/jrburke/r.js/blob/master/build/example.build.js"><code>requirejs</code> complete example configuration</a></li>
+<li><a href="https://github.com/asciidisco/grunt-requirejs"><code>grunt-requirejs</code> documentation</a></li>
+</ul>
+
+<h3 id="test">Test</h3>
+
+<p>Finally, two methods are available to make it easy to automate your client-side testing.</p>
+
+<ul>
+<li><code>registerConnect()</code> - Sets up a static file server for testing things on the client (called by <code>standardSetup()</code> so most of the time you won't call this directly)</li>
+<li><code>registerMocha()</code> - Uses phantomjs to run mocha tests inside a headless browser.</li>
+</ul>
+
+<p>This is how you might create a 'client-test' task which runs your tests against both your development (using <code>requirejs</code>) and fully optimized standalone files:</p>
+
+<pre><code class="javascript">config.registerMocha({
+  urls: [
+    'http://localhost:3001/test/integration/dev.html',
+    'http://localhost:3001/test/integration/dist.html'
+  ]
+});
+grunt.registerTask('client-test', ['connect:test', 'mocha']);
+</code></pre>
+
+<p>The default configuration expects that your tests will start whenever they are ready, and will pipe all console output in the browser to the command line. Take a look at the <a href="https://github.com/kmiyashiro/grunt-mocha"><code>grunt-mocha</code> documentation</a> to get into the details.</p>
+
+<h2 id="history">History</h2>
+
+<h3 id="010-2014-06-07">0.1.0 (2014-06-07)</h3>
+
+<ul>
+<li>Six core functions available:
+<ul><li><code>registerConnect()</code></li>
+<li><code>registerMocha()</code></li>
+<li><code>registerOptimize()</code></li>
+<li><code>registerOptimizeLibrary()</code></li>
+<li><code>registerCopyFromBower()</code></li>
+<li><code>registerCopyFromDist()</code></li></ul></li>
+</ul>
+
+<h2 id="license">License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2013 Scott Nonnenberg &lt;scott@nonnenberg.com&gt;</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></div></div></div></div></body></html>

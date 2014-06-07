@@ -1,0 +1,35 @@
+{
+  "name": "thehelp-client-project",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/server/index.js",
+
+  "dependencies": {
+    "grunt-requirejs": "0.4.2",
+    "grunt-mocha": "0.4.11",
+    "grunt-contrib-connect": "0.7.1",
+    "lodash": "2.x"
+  },
+  "peerDependencies": {
+    "thehelp-project": "3.x"
+  },
+  "devDependencies": {
+    "blanket": "git+ssh://git@github.com:scottnonnenberg/blanket#v1.1.6",
+    "grunt": "0.4.5",
+    "thehelp-project": "3.0.0",
+    "thehelp-test": "2.0.10"
+  },
+
+  "scripts": {
+    "blanket": {
+      "data-cover-only": "src",
+      "data-cover-never": "['lib/','node_modules/','test/','src/client']"
+    }
+  },
+
+  "author": "Scott Nonnenberg",
+  "repository": {
+    "type": "git",
+    "url": "git@infra:thehelp-client-project"
+  }
+}
