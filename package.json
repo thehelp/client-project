@@ -1,7 +1,6 @@
 {
   "name": "thehelp-client-project",
   "version": "0.1.0",
-  "private": true,
   "main": "src/server/index.js",
 
   "dependencies": {
