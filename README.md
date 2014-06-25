@@ -1,12 +1,12 @@
 # thehelp-client-project
 
-Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with (`mocha`)[http://visionmedia.github.io/mocha/]? This library will help you streamline some of your project automation.
+Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with [`mocha`](http://visionmedia.github.io/mocha/)? This library will help you streamline some of your project automation.
 
 ## Features
 
 * [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to support loading your libraries on localhost instead of `file:/` URLs, which have different security settings
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
-* [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your [`requirejs`/AMD-style code into production javascript files.
+* [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your `requirejs`/AMD-style code into production javascript files.
 * Convenience methods to copy files from your `bower_components/` and node modules' `dist/` directories
 
 ## Setup
@@ -52,7 +52,9 @@ For example, in your Gruntfile you could do this to create a 'setup' task using 
 
 ```javascript
 config.registerCopyFromBower();
-config.registerCopyFromDist('thehelp-core', 'thehelp-test');
+config.registerCopyFromDist({
+  modules: ['thehelp-core', 'thehelp-test']
+});
 grunt.registerTask('setup', 'copy:from-bower', 'copy:from-dist');
 ```
 
