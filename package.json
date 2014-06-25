@@ -13,13 +13,13 @@
     "thehelp-project": "3.x"
   },
   "devDependencies": {
-    "blanket": "git+ssh://git@github.com:scottnonnenberg/blanket#v1.1.6",
+    "blanket": "1.1.6",
     "grunt": "0.4.5",
     "thehelp-project": "3.0.0",
     "thehelp-test": "2.0.10"
   },
 
-  "scripts": {
+  "config": {
     "blanket": {
       "data-cover-only": "src",
       "data-cover-never": "['lib/','node_modules/','test/','src/client']"
