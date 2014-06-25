@@ -111,6 +111,12 @@ The default configuration expects that your tests will start whenever they are r
 
 ## History
 
+### 0.2.0 (2014-06-25)
+
+* `registerOptimizeLibrary()` turns off source maps, since they're really big
+* Minor version update: `grunt-contrib-connect`
+* Update dev dependencies
+
 ### 0.1.0 (2014-06-07)
 
 * Six core functions available:
