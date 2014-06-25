@@ -140,14 +140,12 @@ module.exports = function mixin(GruntConfig) {
   `registerOptimizeLibrary` uses `grunt-requirejs` to produce both optimized
   and unoptimized versions of a given library using the r.js optimizer.
   If specified, `standalone` versions of that library can be produced as well
-  (using almond), resulting in six total files:
+  (using almond), resulting in four total files:
 
   + library.js
   + library.min.js
-  + library.min.js.map
   + standalone/library.js
   + standalone/library.min.js
-  + standaline/library.min.js.map
 
   */
   GruntConfig.prototype.registerOptimizeLibrary = function(options) {
@@ -158,40 +156,32 @@ module.exports = function mixin(GruntConfig) {
     var basePath = options.basePath || 'dist';
     var out = options.outName || options.name;
 
-    //not minified, needs requirejs
-    config.optimize = 'none';
+    //we never want source maps for libraries
     config.generateSourceMaps = false;
     config.preserveLicenseComments = true;
 
+    //not minified, needs requirejs
+    config.optimize = 'none';
     config.out = path.join(basePath, out + '.js');
     this.registerOptimize(options);
 
     //minified, needs requirejs
-    delete config.generateSourceMaps;
-
+    delete config.optimize;
     options.postfix = '-min';
     config.out = path.join(basePath, out + '.min.js');
     this.registerOptimize(options);
 
     if (options.standalone) {
 
-      delete options.postfix;
-
       //not minified, standalone with almond.js
       config.optimize = 'none';
-      config.generateSourceMaps = false;
-      config.preserveLicenseComments = true;
-
-      options.postFix = '-standalone';
+      options.postfix = '-standalone';
       config.out = path.join(basePath, 'standalone', out + '.js');
       this.registerOptimize(options);
 
       //minified, standalone with almond.js
       delete config.optimize;
-      delete config.generateSourceMaps;
-
-      options.almond = true;
-      options.postFix = '-standalone-min';
+      options.postfix = '-standalone-min';
       config.out = path.join(basePath, 'standalone', out + '.min.js');
       this.registerOptimize(options);
     }
