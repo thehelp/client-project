@@ -107,17 +107,17 @@ module.exports = function mixin(GruntConfig) {
       throw new Error('Need to provide options.config with requirejs options!');
     }
 
-    if (!options.name) {
-      throw new Error('Need to provide options.name!');
+    if (!options.source) {
+      throw new Error('Need to provide options.source!');
     }
 
     if (options.standalone) {
       config.almond = true;
     }
 
-    options.outName = options.outName || options.name;
-    config.name = options.name;
-    config.out = config.out || options.outName;
+    options.target = options.target || options.source;
+    config.name = options.source;
+    config.out = config.out || options.target;
 
     //turning on source maps unless explictly configured
     if (typeof config.generateSourceMaps === 'undefined') {
@@ -154,7 +154,7 @@ module.exports = function mixin(GruntConfig) {
     options = _.cloneDeep(options);
     var config = options.config || {};
     var basePath = options.basePath || 'dist';
-    var out = options.outName || options.name;
+    var target = options.target || options.source;
 
     //we never want source maps for libraries
     config.generateSourceMaps = false;
@@ -162,27 +162,26 @@ module.exports = function mixin(GruntConfig) {
 
     //not minified, needs requirejs
     config.optimize = 'none';
-    config.out = path.join(basePath, out + '.js');
+    config.target = path.join(basePath, target + '.js');
     this.registerOptimize(options);
 
     //minified, needs requirejs
     delete config.optimize;
     options.postfix = '-min';
-    config.out = path.join(basePath, out + '.min.js');
+    config.target = path.join(basePath, target + '.min.js');
     this.registerOptimize(options);
 
     if (options.standalone) {
-
       //not minified, standalone with almond.js
       config.optimize = 'none';
       options.postfix = '-standalone';
-      config.out = path.join(basePath, 'standalone', out + '.js');
+      config.target = path.join(basePath, 'standalone', target + '.js');
       this.registerOptimize(options);
 
       //minified, standalone with almond.js
       delete config.optimize;
       options.postfix = '-standalone-min';
-      config.out = path.join(basePath, 'standalone', out + '.min.js');
+      config.target = path.join(basePath, 'standalone', target + '.min.js');
       this.registerOptimize(options);
     }
   };
