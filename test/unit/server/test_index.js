@@ -1,8 +1,8 @@
 
 'use strict';
 
-var test = require('thehelp-test');
-var expect = test.core.expect;
+var chai = require('chai');
+var expect = chai.expect;
 
 var index = require('../../../src/server/index');
 

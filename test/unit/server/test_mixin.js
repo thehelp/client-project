@@ -1,9 +1,9 @@
 
 'use strict';
 
-var test = require('thehelp-test');
-var expect = test.core.expect;
-var sinon = test.sinon;
+var chai = require('chai');
+var sinon = require('sinon');
+var expect = chai.expect;
 
 var GruntConfig = require('thehelp-project').GruntConfig;
 var mixin = require('../../../src/server/mixin');
