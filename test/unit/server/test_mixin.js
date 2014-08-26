@@ -21,59 +21,21 @@ describe('mixin for GruntConfig', function() {
     mixin(GruntConfig);
   });
 
-  describe('#registerCopyFromBower', function() {
-    it('honors special cases', function() {
-      var dirs = ['lodash', 'async'];
-      var expected = {
-        files: {
-          'lib/vendor/lodash.compat.js': 'bower_components/lodash/dist/lodash.compat.js',
-          'lib/vendor/async.js': 'bower_components/async/lib/async.js'
-        }
-      };
-
-      grunt.config = sinon.spy(function(name, data) {
-        expect(data).to.deep.equal(expected);
-      });
-
-      fs.readdirSync = sinon.stub().returns(dirs);
-      fs.statSync = sinon.stub().returns({
-        isFile: sinon.stub().returns(true)
-      });
-
-      config.registerCopyFromBower();
-
-      expect(grunt.config).to.have.property('callCount', 1);
-    });
+  it('now has registerOptimize key', function() {
+    expect(GruntConfig).to.have.deep.property('prototype.registerOptimize').that.exist;
   });
 
-  describe('#registerCopyFromDist', function() {
-    it('creates just one task including all modules', function() {
-      var modules = ['thehelp-core', 'thehelp-test'];
-      var expected = {
-        files: [{
-          expand: true,
-          cwd: 'node_modules/thehelp-core/dist',
-          src: ['**/*'],
-          dest: 'lib/vendor'
-        },
-        {
-          expand: true,
-          cwd: 'node_modules/thehelp-test/dist',
-          src: ['**/*'],
-          dest: 'lib/vendor'
-        }]
-      };
+  it('now has registerOptimizeLibrary key', function() {
+    expect(GruntConfig).to.have.deep.property('prototype.registerOptimizeLibrary')
+      .that.exist;
+  });
 
-      grunt.config = sinon.spy(function(name, data) {
-        expect(data).to.deep.equal(expected);
-      });
+  it('now has registerConnect key', function() {
+    expect(GruntConfig).to.have.deep.property('prototype.registerConnect').that.exist;
+  });
 
-      config.registerCopyFromDist({
-        modules: modules
-      });
-
-      expect(grunt.config).to.have.property('callCount', 1);
-    });
+  it('now has registerMocha key', function() {
+    expect(GruntConfig).to.have.deep.property('prototype.registerMocha').that.exist;
   });
 
 });

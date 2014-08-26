@@ -7,7 +7,6 @@ provided by `thehelp-project`.
 
 'use strict';
 
-var fs = require('fs');
 var path = require('path');
 var _ = require('lodash');
 
@@ -149,7 +148,6 @@ module.exports = function mixin(GruntConfig) {
 
   */
   GruntConfig.prototype.registerOptimizeLibrary = function(options) {
-
     options = options || {};
     options = _.cloneDeep(options);
     var config = options.config || {};
