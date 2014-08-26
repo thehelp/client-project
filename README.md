@@ -1,13 +1,12 @@
 # thehelp-client-project
 
-Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with [`mocha`](http://visionmedia.github.io/mocha/)? This library will help you streamline some of your project automation.
+Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with [`mocha`](http://visionmedia.github.io/mocha/)? This easy-to-set-up library will streamline your project automation.
 
 ## Features
 
 * [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to support static files on localhost instead of `file:/` URLs, which have different security settings
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
 * [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your AMD-style modules into production javascript files.
-* Convenience methods to copy files from your `bower_components/` and node modules' `dist/` directories into lib/vendor, giving you
 
 ## Setup
 
@@ -17,7 +16,7 @@ First, install the project (and its friend, [`thehelp-project`](https://github.c
 npm install thehelp-project thehelp-client-project --save-dev
 ```
 
-If you're new to `thehelp-project`, it would be good to read its docs first. Then make sure you have the grunt command available:
+If you're new to `thehelp-project`, it would be good to read [its docs](https://github.com/thehelp/project) first. Then make sure you have the grunt command available:
 
 ```
 npm install -g grunt-cli
@@ -41,38 +40,21 @@ module.exports = function(grunt) {
 
 ## Usage
 
-### Setup
-
-Two methods are provided to help set your project up:
-
-* `registerCopyFromBower()` - Copies the primary js files from installed bower modules to 'lib/vendor'
-* `registerCopyFromDist()` - Copies the contents of node modules' 'dist/' folder to 'lib/vendor'
-
-For example, in your Gruntfile you could do this to create a 'setup' task using both of these:
-
-```javascript
-config.registerCopyFromBower();
-config.registerCopyFromDist({
-  modules: ['thehelp-core', 'thehelp-test']
-});
-grunt.registerTask('setup', 'copy:from-bower', 'copy:from-dist');
-```
-
 ### Optimize
 
-Another two methods help simplify your
+These methods give you two easier methods to generate concatenated, optimized javascript files via `requirejs`:
 
-* `registerOptimize()` - Generates a concatenated, optimized based on AMD modules.
+* `registerOptimize()` - Generates a concatenated, optimized file based on AMD modules.
 * `registerOptimizeLibrary()` - Generates both minified and non-minified concatenated javascript files. Best-suited for generating a library for consumption by others.
 
-This will generate a single, optimized file named 'home.js' under 'dist/js' which does not need `requirejs` on the page to run:
+This will generate a single, optimized file named 'home.js' under 'dist/js' which does not need `requirejs` on the page to run, as well as source maps:
 
 ```javascript
 config.registerOptimize({
-  name: 'src/client/home',
-  outName: 'dist/js/home',
+  source: 'src/client/home',
+  target: 'dist/js/home',
   standalone: true,
-  config: {
+  config: { // these are the options piped directly into requirejs
     baseUrl: './',
     paths: {
       backbone: 'lib/vendor/backbone',
@@ -89,7 +71,24 @@ This will generate four files. The first two require a module loader like [`almo
 * dist/js/standalone/home
 * dist/js/standalone/home-min
 
-For more information on requirejs configuration:
+Or, you can generate a file which isn't standalone. Anything in the `empty` array will not be included in the final file. When your code runs it will still need those packages, so those components must be provided by other files on the page.
+
+```javascript
+config.registerOptimize({
+  source: 'src/client/home',
+  target: 'dist/js/home',
+  empty: ['util', 'winston'],
+  config: {
+    baseUrl: './',
+    paths: {
+      backbone: 'lib/vendor/backbone',
+      underscore: 'lib/vendor/underscore'
+    }
+  }
+})
+```
+
+For more information on requirejs configuration see the integration test included in this project, and the `requirejs` documentation:
 
 * [`requirejs` optimization documentation](http://requirejs.org/docs/optimization.html)
 * [`requirejs` complete example configuration](https://github.com/jrburke/r.js/blob/master/build/example.build.js)
@@ -97,7 +96,7 @@ For more information on requirejs configuration:
 
 ### Test
 
-Finally, two methods are available to make it easy to automate your client-side testing.
+Another two methods make it easy to automate your client-side testing.
 
 * `registerConnect()` - Sets up a static file server for testing things on the client (called by `standardSetup()` so most of the time you won't call this directly)
 * `registerMocha()` - Uses phantomjs to run mocha tests inside a headless browser.
@@ -116,7 +115,16 @@ grunt.registerTask('client-test', ['connect:test', 'mocha']);
 
 The default configuration expects that your tests will start whenever they are ready, and will pipe all console output in the browser to the command line. Take a look at the [`grunt-mocha` documentation](https://github.com/kmiyashiro/grunt-mocha) to get into the details.
 
+_Note: the registered `connect:test` task runs the server on port 3001. The `connect:keepalive` task is useful for manual browser-based debugging, and runs on port 3000._
+
 ## History
+
+### 0.3.0 (2014-08-26)
+
+* Breaking: removed `registerCopyFromDist()` and `registerCopyFromBower()`; no real need to copy into local repo. Will do it on a case-by-case basis when a project requires a build step.
+* Update `thehelp-project` dev dependency
+* Remove `blanket` dev dependency and configuration; we weren't really using it
+* Remove `thehelp-test` (circular) dev dependency, add `sinon` and `chai` as replacements
 
 ### 0.2.0 (2014-06-25)
 
