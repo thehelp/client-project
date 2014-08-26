@@ -4,20 +4,20 @@ Developing client-side javascript with [`requirejs`](http://requirejs.org/) and 
 
 ## Features
 
-* [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to support loading your libraries on localhost instead of `file:/` URLs, which have different security settings
+* [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to support static files on localhost instead of `file:/` URLs, which have different security settings
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
-* [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your `requirejs`/AMD-style code into production javascript files.
-* Convenience methods to copy files from your `bower_components/` and node modules' `dist/` directories
+* [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your AMD-style modules into production javascript files.
+* Convenience methods to copy files from your `bower_components/` and node modules' `dist/` directories into lib/vendor, giving you
 
 ## Setup
 
-First, install the project (and its friend, `thehelp-project`) as dev dependencies:
+First, install the project (and its friend, [`thehelp-project`](https://github.com/thehelp/project)) as dev dependencies:
 
 ```
 npm install thehelp-project thehelp-client-project --save-dev
 ```
 
-If you're new to [`thehelp-project`](https://github.com/thehelp/project), it would be good to read its docs first. Then make sure you have the grunt command available:
+If you're new to `thehelp-project`, it would be good to read its docs first. Then make sure you have the grunt command available:
 
 ```
 npm install -g grunt-cli
@@ -63,7 +63,7 @@ grunt.registerTask('setup', 'copy:from-bower', 'copy:from-dist');
 Another two methods help simplify your
 
 * `registerOptimize()` - Generates a concatenated, optimized based on AMD modules.
-* `registerOptimizeLibrary()` - Generates both minified and non-minified concatenated javascript files.Best-suited for generating a library for consumption by others.
+* `registerOptimizeLibrary()` - Generates both minified and non-minified concatenated javascript files. Best-suited for generating a library for consumption by others.
 
 This will generate a single, optimized file named 'home.js' under 'dist/js' which does not need `requirejs` on the page to run:
 
@@ -81,6 +81,13 @@ config.registerOptimize({
   }
 })
 ```
+
+This will generate four files. The first two require a module loader like [`almond.js`](https://github.com/jrburke/almond) or `requirejs`. The second two include `almond.js` and can therefore be used with nothing else on the page.
+
+* dist/js/home
+* dist/js/home-min
+* dist/js/standalone/home
+* dist/js/standalone/home-min
 
 For more information on requirejs configuration:
 
