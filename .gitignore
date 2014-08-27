@@ -26,4 +26,8 @@ npm-debug.log
 *.sublime-workspace
 env.json
 
+test/default/dist
+test/default/docs
+test/default/lib
+
 

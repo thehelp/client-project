@@ -13,6 +13,7 @@
     "thehelp-project": "3.x"
   },
   "devDependencies": {
+    "amdefine": "0.1.0",
     "chai": "1.9.1",
     "grunt": "0.4.5",
     "sinon": "1.10.3",

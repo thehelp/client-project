@@ -131,7 +131,9 @@ module.exports = function mixin(GruntConfig) {
       });
     }
 
-    var taskName = 'requirejs.' + options.outName + (options.postfix || '') + '.options';
+    var name = config.out || '';
+    name = name.replace(/\./g, '_');
+    var taskName = 'requirejs.' + name + '.options';
     this.grunt.config(taskName, config);
   };
 
@@ -151,35 +153,37 @@ module.exports = function mixin(GruntConfig) {
     options = options || {};
     options = _.cloneDeep(options);
     var config = options.config || {};
-    var basePath = options.basePath || 'dist';
+    var targetPath = options.targetPath || 'dist/js';
     var target = options.target || options.source;
+    var standalone = options.standalone;
 
     //we never want source maps for libraries
     config.generateSourceMaps = false;
     config.preserveLicenseComments = true;
 
+    options.standalone = false;
+
     //not minified, needs requirejs
     config.optimize = 'none';
-    config.target = path.join(basePath, target + '.js');
+    config.out = path.join(targetPath, target + '.js');
     this.registerOptimize(options);
 
     //minified, needs requirejs
     delete config.optimize;
-    options.postfix = '-min';
-    config.target = path.join(basePath, target + '.min.js');
+    config.out = path.join(targetPath, target + '.min.js');
     this.registerOptimize(options);
 
-    if (options.standalone) {
+    if (standalone) {
+      options.standalone = true;
+
       //not minified, standalone with almond.js
       config.optimize = 'none';
-      options.postfix = '-standalone';
-      config.target = path.join(basePath, 'standalone', target + '.js');
+      config.out = path.join(targetPath, 'standalone', target + '.js');
       this.registerOptimize(options);
 
       //minified, standalone with almond.js
       delete config.optimize;
-      options.postfix = '-standalone-min';
-      config.target = path.join(basePath, 'standalone', target + '.min.js');
+      config.out = path.join(targetPath, 'standalone', target + '.min.js');
       this.registerOptimize(options);
     }
   };
