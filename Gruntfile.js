@@ -12,4 +12,11 @@ module.exports = function(grunt) {
 
   config.standardSetup();
   config.standardDefault();
+
+  grunt.config('shell.integration', {
+    command: 'cd test/default && ./run.sh && ./clean.sh'
+  });
+
+  var tasks = config.defaultTasks.concat(['shell:integration']);
+  grunt.registerTask('default', tasks);
 };
