@@ -14,7 +14,7 @@ module.exports = function(grunt) {
   config.standardDefault();
 
   grunt.config('shell.integration', {
-    command: 'cd test/default && ./run.sh && ./clean.sh'
+    command: 'cd test/default && ./run.sh && find dist && ./clean.sh'
   });
 
   var tasks = config.defaultTasks.concat(['shell:integration']);
