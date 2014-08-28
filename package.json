@@ -20,6 +20,10 @@
     "thehelp-project": "3.3.1"
   },
 
+  "scripts": {
+    "test": "grunt"
+  },
+
   "description": "Grunt-based testing/optimization for requirejs-based client javascript",
   "keywords": [
     "grunt",
