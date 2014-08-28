@@ -91,7 +91,7 @@ module.exports = function mixin(GruntConfig) {
   // `registerOptimizeLibrary` uses `grunt-requirejs` to produce one concatenated file,
   // by default optimized as well.
   GruntConfig.prototype.registerOptimize = function(options) {
-    /*jshint maxcomplexity: 11 */
+    /*jshint maxcomplexity: 12 */
 
     if (!this.requirejsRegistered) {
       this.loadLocalNpm('grunt-requirejs', __dirname);
@@ -118,8 +118,15 @@ module.exports = function mixin(GruntConfig) {
     config.name = options.source;
     config.out = config.out || options.target;
 
+    if (!config.out) {
+      throw new Error('Need to provide options.target or options.config.out!');
+    }
+
     //turning on source maps unless explictly configured
-    if (typeof config.generateSourceMaps === 'undefined') {
+    if (typeof config.optimize === 'undefined' &&
+      typeof config.generateSourceMaps === 'undefined' &&
+      typeof config.preserveLicenseComments === 'undefined') {
+
       config.optimize = 'uglify2';
       config.generateSourceMaps = true;
       config.preserveLicenseComments = false;
@@ -157,9 +164,10 @@ module.exports = function mixin(GruntConfig) {
     var target = options.target || options.source;
     var standalone = options.standalone;
 
-    //we never want source maps for libraries
-    config.generateSourceMaps = false;
-    config.preserveLicenseComments = true;
+    if (typeof config.generateSourceMaps === 'undefined') {
+      config.generateSourceMaps = false;
+      config.preserveLicenseComments = true;
+    }
 
     options.standalone = false;
 
