@@ -4,7 +4,7 @@ Developing client-side javascript with [`requirejs`](http://requirejs.org/) and 
 
 ## Features
 
-* [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to support static files on localhost instead of `file:/` URLs, which have different security settings
+* [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to serve static files on localhost instead of `file:/` URLs, which have different security settings
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
 * [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your AMD-style modules into production javascript files.
 
@@ -52,7 +52,7 @@ This will generate a single, optimized file named 'home.js' under 'dist/js' whic
 ```javascript
 config.registerOptimize({
   source: 'src/client/home',
-  target: 'dist/js/home',
+  target: 'dist/js/home_standalone.js',
   standalone: true,
   config: { // these are the options piped directly into requirejs
     baseUrl: './',
@@ -64,19 +64,12 @@ config.registerOptimize({
 })
 ```
 
-This will generate four files. The first two require a module loader like [`almond.js`](https://github.com/jrburke/almond) or `requirejs`. The second two include `almond.js` and can therefore be used with nothing else on the page.
-
-* dist/js/home
-* dist/js/home-min
-* dist/js/standalone/home
-* dist/js/standalone/home-min
-
 Or, you can generate a file which isn't standalone. Anything in the `empty` array will not be included in the final file. When your code runs it will still need those packages, so those components must be provided by other files on the page.
 
 ```javascript
 config.registerOptimize({
   source: 'src/client/home',
-  target: 'dist/js/home',
+  target: 'dist/js/home.js',
   empty: ['util', 'winston'],
   config: {
     baseUrl: './',
@@ -88,7 +81,34 @@ config.registerOptimize({
 })
 ```
 
-For more information on requirejs configuration see the integration test included in this project, and the `requirejs` documentation:
+`registerOptimizeLibrary` will generate four separate requirejs sub-tasks...
+
+```javascript
+config.registerOptimizeLibrary({
+  source: 'src/library',
+  target: 'library-name',
+  targetPath: 'dist/js',
+  standalone: true,
+  config: {
+    baseUrl: './',
+    paths: {
+      backbone: 'lib/vendor/backbone',
+      underscore: 'lib/vendor/underscore'
+    }
+  }
+})
+```
+
+...resulting in four files:
+
+* dist/js/library-name.js
+* dist/js/library-name.min.js
+* dist/js/standalone/library-name.js
+* dist/js/standalone/library-name.min.js
+
+The first two files require you to provide a module loader like [`almond.js`](https://github.com/jrburke/almond) or `requirejs`. The second two include `almond.js` and can therefore be used with nothing else on the page.
+
+For more information on requirejs configuration see the integration test included in this project (under 'test/default'), and the `requirejs` documentation:
 
 * [`requirejs` optimization documentation](http://requirejs.org/docs/optimization.html)
 * [`requirejs` complete example configuration](https://github.com/jrburke/r.js/blob/master/build/example.build.js)
@@ -115,13 +135,15 @@ grunt.registerTask('client-test', ['connect:test', 'mocha']);
 
 The default configuration expects that your tests will start whenever they are ready, and will pipe all console output in the browser to the command line. Take a look at the [`grunt-mocha` documentation](https://github.com/kmiyashiro/grunt-mocha) to get into the details.
 
-_Note: the registered `connect:test` task runs the server on port 3001. The `connect:keepalive` task is useful for manual browser-based debugging, and runs on port 3000._
+_Note: the registered `connect:test` task runs the server on port 3001. The `connect:keepalive` task is useful for manual browser-based debugging, and runs on port 3000. This is so you can run grunt test runs while also keeping a server up for your browser-based testing._
 
 ## History
 
-### 0.3.0 (2014-08-26)
+### 0.3.0 (2014-08-28)
 
 * Breaking: removed `registerCopyFromDist()` and `registerCopyFromBower()`; no real need to copy into local repo. Will do it on a case-by-case basis when a project requires a build step.
+* Breaking: `registerOptimize()` parameter names made more friendly `name`->`source`, `outName`->`target`, `basePath`->`targetPath`
+* Documentation updates
 * Update `thehelp-project` dev dependency
 * Remove `blanket` dev dependency and configuration; we weren't really using it
 * Remove `thehelp-test` (circular) dev dependency, add `sinon` and `chai` as replacements

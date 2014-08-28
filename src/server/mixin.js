@@ -12,6 +12,8 @@ var _ = require('lodash');
 
 module.exports = function mixin(GruntConfig) {
 
+  // Before we replace `standardSetup` with our version which calls `registerConnect` we
+  // save the previous method in an array.
   var previous =
     GruntConfig.prototype.previousSetup = GruntConfig.prototype.previousSetup || [];
 
@@ -88,9 +90,14 @@ module.exports = function mixin(GruntConfig) {
     });
   };
 
-  // `registerOptimizeLibrary` uses `grunt-requirejs` to produce one concatenated file,
-  // by default optimized as well.
-  GruntConfig.prototype.registerOptimize = function(options) {
+  /*
+  `registerOptimizeLibrary` uses `grunt-requirejs` to produce one concatenated file,
+  optimized and including source maps by default.
+
+  _Sadly, `preserveLicenseComments` is incompatible with `generateSourceMaps`. So we've
+  opted for source maps._
+  */
+ GruntConfig.prototype.registerOptimize = function(options) {
     /*jshint maxcomplexity: 12 */
 
     if (!this.requirejsRegistered) {
@@ -164,6 +171,7 @@ module.exports = function mixin(GruntConfig) {
     var target = options.target || options.source;
     var standalone = options.standalone;
 
+    //turn off source maps by default, since we're providing unminified files
     if (typeof config.generateSourceMaps === 'undefined') {
       config.generateSourceMaps = false;
       config.preserveLicenseComments = true;
