@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><title>History</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="History"><meta name="groc-project-path" content="History.md"><meta name="groc-github-url" content="https://github.com/thehelp/client-project"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/thehelp/client-project/blob/master/History.md">History.md</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h2 id="030-2014-08-28">0.3.0 (2014-08-28)</h2>
+
+<ul>
+<li>Breaking: removed <code>registerCopyFromDist()</code> and <code>registerCopyFromBower()</code>; no real need to copy into local repo. Will do it on a case-by-case basis when a project requires a build step.</li>
+<li>Breaking: <code>registerOptimize()</code> parameter names made more friendly <code>name</code>-><code>source</code>, <code>outName</code>-><code>target</code>, <code>basePath</code>-><code>targetPath</code></li>
+<li>travis-ci support</li>
+<li>Documentation updates</li>
+<li>Update <code>thehelp-project</code> dev dependency</li>
+<li>Remove <code>blanket</code> dev dependency and configuration; we weren't really using it</li>
+<li>Remove <code>thehelp-test</code> (circular) dev dependency, add <code>sinon</code> and <code>chai</code> as replacements</li>
+<li>Full integration test</li>
+</ul>
+
+<h2 id="020-2014-06-25">0.2.0 (2014-06-25)</h2>
+
+<ul>
+<li><code>registerOptimizeLibrary()</code> turns off source maps, since they're really big</li>
+<li>Minor version update: <code>grunt-contrib-connect</code></li>
+<li>Update dev dependencies</li>
+</ul>
+
+<h2 id="010-2014-06-07">0.1.0 (2014-06-07)</h2>
+
+<ul>
+<li>Six core functions available:
+<ul><li><code>registerConnect()</code></li>
+<li><code>registerMocha()</code></li>
+<li><code>registerOptimize()</code></li>
+<li><code>registerOptimizeLibrary()</code></li>
+<li><code>registerCopyFromBower()</code></li>
+<li><code>registerCopyFromDist()</code></li></ul></li>
+</ul></div></div></div></div></body></html>

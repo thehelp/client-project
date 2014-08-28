@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><title>src/server/mixin</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="src/server/mixin"><meta name="groc-project-path" content="src/server/mixin.js"><meta name="groc-github-url" content="https://github.com/thehelp/client-project"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/thehelp/client-project/blob/master/src/server/mixin.js">src/server/mixin.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="mixin">mixin</h1>
+
+<p>Adds a set of new client-side development configuration methods to the GruntConfig class
+provided by <code>thehelp-project</code>.</p></div></div><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;lodash&#39;</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">mixin</span><span class="p">(</span><span class="nx">GruntConfig</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Before we replace <code>standardSetup</code> with our version which calls <code>registerConnect</code> we
+save the previous method in an array.</p></div></div><div class="code"><div class="wrapper">  <span class="kd">var</span> <span class="nx">previous</span> <span class="o">=</span>
+    <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">previousSetup</span> <span class="o">=</span> <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">previousSetup</span> <span class="o">||</span> <span class="p">[];</span>
+
+  <span class="kd">var</span> <span class="nx">parent</span> <span class="o">=</span> <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">standardSetup</span><span class="p">;</span>
+  <span class="nx">previous</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">parent</span><span class="p">);</span>
+
+  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">standardSetup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+
+    <span class="nx">parent</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">registerConnect</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">connect</span><span class="p">);</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerConnect</code> sets up two targets for the <code>grunt-contrib-connect</code>
+task, which runs a basic file server. Two different targets are provided:</p>
+
+<ul>
+<li>test: On port 3001, this server will stop as soon as the grunt run stops,
+which means that it is only useful for grunt-based testing.</li>
+<li>keepalive: A server on 3000 that runs until explicitly stopped - good
+for active development.</li>
+</ul></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerConnect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">loadLocalNpm</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-connect&#39;</span><span class="p">,</span> <span class="nx">__dirname</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{</span>
+      <span class="nx">test</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">base</span><span class="o">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+          <span class="nx">port</span><span class="o">:</span> <span class="mi">3001</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nx">keepalive</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">base</span><span class="o">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+          <span class="nx">port</span><span class="o">:</span> <span class="mi">3000</span><span class="p">,</span>
+          <span class="nx">keepalive</span><span class="o">:</span> <span class="kc">true</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerMocha</code> pulls in <code>grunt-mocha</code> which uses <code>phantomjs</code>
+and a custom bridge to run in-browser tests on the command line. You're
+just responsible for the collection of <code>urls</code> to hit. You might consider using
+the port 3001 urls available with the <code>connect</code> task above.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerMocha</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">urls</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Need to provide array of urls to registerMocha()!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">reporter</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">reporter</span> <span class="o">||</span> <span class="s1">&#39;Spec&#39;</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">options</span><span class="p">.</span><span class="nx">run</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//default to allowing tests to run when they are ready</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">run</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">options</span><span class="p">.</span><span class="nx">log</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">//default to piping browser console output back to the command line</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">log</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">loadLocalNpm</span><span class="p">(</span><span class="s1">&#39;grunt-mocha&#39;</span><span class="p">,</span> <span class="nx">__dirname</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="s1">&#39;mocha&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="nx">options</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerOptimizeLibrary</code> uses <code>grunt-requirejs</code> to produce one concatenated file,
+optimized and including source maps by default.</p>
+
+<p><em>Sadly, <code>preserveLicenseComments</code> is incompatible with <code>generateSourceMaps</code>. So we've
+opted for source maps.</em></p></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerOptimize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/*jshint maxcomplexity: 12 */</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">requirejsRegistered</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">loadLocalNpm</span><span class="p">(</span><span class="s1">&#39;grunt-requirejs&#39;</span><span class="p">,</span> <span class="nx">__dirname</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">requirejsRegistered</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">config</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Need to provide options.config with requirejs options!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Need to provide options.source!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">standalone</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">almond</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">target</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">target</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">source</span><span class="p">;</span>
+    <span class="nx">config</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">source</span><span class="p">;</span>
+    <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">target</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">.</span><span class="nx">out</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Need to provide options.target or options.config.out!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//turning on source maps unless explictly configured</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span>
+      <span class="k">typeof</span> <span class="nx">config</span><span class="p">.</span><span class="nx">generateSourceMaps</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span>
+      <span class="k">typeof</span> <span class="nx">config</span><span class="p">.</span><span class="nx">preserveLicenseComments</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span> <span class="o">=</span> <span class="s1">&#39;uglify2&#39;</span><span class="p">;</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">generateSourceMaps</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">preserveLicenseComments</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">empty</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">empty</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">module</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">config</span><span class="p">.</span><span class="nx">paths</span><span class="p">[</span><span class="nx">module</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;empty:&#39;</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\./g</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">taskName</span> <span class="o">=</span> <span class="s1">&#39;requirejs.&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;.options&#39;</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="nx">taskName</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerOptimizeLibrary</code> uses <code>grunt-requirejs</code> to produce both optimized
+and unoptimized versions of a given library using the r.js optimizer.
+If specified, <code>standalone</code> versions of that library can be produced as well
+(using almond), resulting in four total files:</p>
+
+<ul>
+<li>library.js</li>
+<li>library.min.js</li>
+<li>standalone/library.js</li>
+<li>standalone/library.min.js</li>
+</ul></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerOptimizeLibrary</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">cloneDeep</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="kd">var</span> <span class="nx">targetPath</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">targetPath</span> <span class="o">||</span> <span class="s1">&#39;dist/js&#39;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">target</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">source</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">standalone</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">standalone</span><span class="p">;</span>
+
+    <span class="c1">//turn off source maps by default, since we&#39;re providing unminified files</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">config</span><span class="p">.</span><span class="nx">generateSourceMaps</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">generateSourceMaps</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">preserveLicenseComments</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">standalone</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+    <span class="c1">//not minified, needs requirejs</span>
+    <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+    <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span> <span class="nx">target</span> <span class="o">+</span> <span class="s1">&#39;.js&#39;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">registerOptimize</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+    <span class="c1">//minified, needs requirejs</span>
+    <span class="k">delete</span> <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span><span class="p">;</span>
+    <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span> <span class="nx">target</span> <span class="o">+</span> <span class="s1">&#39;.min.js&#39;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">registerOptimize</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">standalone</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">standalone</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+      <span class="c1">//not minified, standalone with almond.js</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span> <span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="nx">target</span> <span class="o">+</span> <span class="s1">&#39;.js&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registerOptimize</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+      <span class="c1">//minified, standalone with almond.js</span>
+      <span class="k">delete</span> <span class="nx">config</span><span class="p">.</span><span class="nx">optimize</span><span class="p">;</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span> <span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="nx">target</span> <span class="o">+</span> <span class="s1">&#39;.min.js&#39;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">registerOptimize</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+<span class="p">};</span></div></div></div></div></body></html>
