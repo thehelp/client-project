@@ -137,32 +137,9 @@ The default configuration expects that your tests will start whenever they are r
 
 _Note: the registered `connect:test` task runs the server on port 3001. The `connect:keepalive` task is useful for manual browser-based debugging, and runs on port 3000. This is so you can run grunt test runs while also keeping a server up for your browser-based testing._
 
-## History
+## Detailed Documentation
 
-### 0.3.0 (2014-08-28)
-
-* Breaking: removed `registerCopyFromDist()` and `registerCopyFromBower()`; no real need to copy into local repo. Will do it on a case-by-case basis when a project requires a build step.
-* Breaking: `registerOptimize()` parameter names made more friendly `name`->`source`, `outName`->`target`, `basePath`->`targetPath`
-* Documentation updates
-* Update `thehelp-project` dev dependency
-* Remove `blanket` dev dependency and configuration; we weren't really using it
-* Remove `thehelp-test` (circular) dev dependency, add `sinon` and `chai` as replacements
-
-### 0.2.0 (2014-06-25)
-
-* `registerOptimizeLibrary()` turns off source maps, since they're really big
-* Minor version update: `grunt-contrib-connect`
-* Update dev dependencies
-
-### 0.1.0 (2014-06-07)
-
-* Six core functions available:
-  * `registerConnect()`
-  * `registerMocha()`
-  * `registerOptimize()`
-  * `registerOptimizeLibrary()`
-  * `registerCopyFromBower()`
-  * `registerCopyFromDist()`
+Detailed docs be found at this project's GitHub Pages, thanks to `groc`: [http://thehelp.github.io/client-project/src/server/mixin.html](http://thehelp.github.io/client-project/src/server/mixin.html)
 
 ## License
 
