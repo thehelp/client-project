@@ -12,13 +12,13 @@ Developing client-side javascript with [`requirejs`](http://requirejs.org/) and 
 
 First, install the project (and its friend, [`thehelp-project`](https://github.com/thehelp/project)) as dev dependencies:
 
-```
+```bash
 npm install thehelp-project thehelp-client-project --save-dev
 ```
 
 If you're new to `thehelp-project`, it would be good to read [its docs](https://github.com/thehelp/project) first. Then make sure you have the grunt command available:
 
-```
+```bash
 npm install -g grunt-cli
 ```
 
