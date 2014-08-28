@@ -17,7 +17,7 @@
     "chai": "1.9.1",
     "grunt": "0.4.5",
     "sinon": "1.10.3",
-    "thehelp-project": "3.3.0"
+    "thehelp-project": "3.3.1"
   },
 
   "author": "Scott Nonnenberg",
