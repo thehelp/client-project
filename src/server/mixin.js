@@ -97,7 +97,7 @@ module.exports = function mixin(GruntConfig) {
   _Sadly, `preserveLicenseComments` is incompatible with `generateSourceMaps`. So we've
   opted for source maps._
   */
- GruntConfig.prototype.registerOptimize = function(options) {
+  GruntConfig.prototype.registerOptimize = function(options) {
     /*jshint maxcomplexity: 12 */
 
     if (!this.requirejsRegistered) {
