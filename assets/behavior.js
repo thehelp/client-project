@@ -71,8 +71,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "type": "heading",
                   "data": {
                     "level": 3,
+                    "title": "Add Preamble",
+                    "slug": "add-preamble"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
                     "title": "Test",
                     "slug": "test"
+                  },
+                  "depth": 3
+                }, {
+                  "type": "heading",
+                  "data": {
+                    "level": 3,
+                    "title": "Test on multiple browsers",
+                    "slug": "test-on-multiple-browsers"
                   },
                   "depth": 3
                 }
@@ -83,6 +99,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                 "level": 2,
                 "title": "Detailed Documentation",
                 "slug": "detailed-documentation"
+              },
+              "depth": 2
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 2,
+                "title": "Contributing changes",
+                "slug": "contributing-changes"
               },
               "depth": 2
             }, {
@@ -145,8 +169,24 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "type": "heading",
               "data": {
                 "level": 3,
+                "title": "Add Preamble",
+                "slug": "add-preamble"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
                 "title": "Test",
                 "slug": "test"
+              },
+              "depth": 3
+            }, {
+              "type": "heading",
+              "data": {
+                "level": 3,
+                "title": "Test on multiple browsers",
+                "slug": "test-on-multiple-browsers"
               },
               "depth": 3
             }
@@ -157,6 +197,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
             "level": 2,
             "title": "Detailed Documentation",
             "slug": "detailed-documentation"
+          },
+          "depth": 2
+        }, {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "Contributing changes",
+            "slug": "contributing-changes"
           },
           "depth": 2
         }, {
@@ -214,6 +262,14 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
       "depth": 1,
       "outline": [
         {
+          "type": "heading",
+          "data": {
+            "level": 2,
+            "title": "0.4.0 (2014-09-10)",
+            "slug": "040-2014-09-10"
+          },
+          "depth": 2
+        }, {
           "type": "heading",
           "data": {
             "level": 2,
@@ -310,6 +366,93 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
                   "depth": 1
                 },
                 "title": "mixin"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "projectPath": "src/server/preamble_renderer.js",
+                "targetPath": "src/server/preamble_renderer",
+                "pageTitle": "src/server/preamble_renderer",
+                "firstHeader": {
+                  "type": "heading",
+                  "data": {
+                    "level": 1,
+                    "title": "PreambleRenderer",
+                    "slug": "preamblerenderer",
+                    "isFileHeader": true
+                  },
+                  "depth": 1
+                },
+                "title": "PreambleRenderer"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "projectPath": "src/server/sauce_platforms.js",
+                "targetPath": "src/server/sauce_platforms",
+                "pageTitle": "src/server/sauce_platforms",
+                "firstHeader": {
+                  "type": "heading",
+                  "data": {
+                    "level": 1,
+                    "title": "sauce_platforms",
+                    "slug": "sauce-platforms",
+                    "isFileHeader": true
+                  },
+                  "depth": 1
+                },
+                "title": "sauce_platforms"
+              },
+              "depth": 3,
+              "outline": []
+            }, {
+              "type": "file",
+              "data": {
+                "language": {
+                  "nameMatchers": [".js"],
+                  "pygmentsLexer": "javascript",
+                  "multiLineComment": ["/*", "*", "*/"],
+                  "singleLineComment": ["//"],
+                  "ignorePrefix": "}",
+                  "foldPrefix": "^",
+                  "name": "JavaScript"
+                },
+                "projectPath": "src/server/util.js",
+                "targetPath": "src/server/util",
+                "pageTitle": "src/server/util",
+                "firstHeader": {
+                  "type": "heading",
+                  "data": {
+                    "level": 1,
+                    "title": "Util",
+                    "slug": "util",
+                    "isFileHeader": true
+                  },
+                  "depth": 1
+                },
+                "title": "Util"
               },
               "depth": 3,
               "outline": []

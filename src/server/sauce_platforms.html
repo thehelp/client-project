@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><title>src/server/sauce_platforms</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="src/server/sauce_platforms"><meta name="groc-project-path" content="src/server/sauce_platforms.js"><meta name="groc-github-url" content="https://github.com/thehelp/client-project"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/thehelp/client-project/blob/master/src/server/sauce_platforms.js">src/server/sauce_platforms.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="sauce-platforms">sauce_platforms</h1>
+
+<p>Makes it easier to deal with the platforms offered by <a href="http://saucelabs.com">Sauce Labs</a>
+testing systems.</p>
+
+<p>Loosely based on browsers with reasonable usage:
+<a href="http://caniuse.com/usage_table.php">http://caniuse.com/usage_table.php</a></p>
+
+<p>Sauce Labs current supported platforms:</p>
+
+<ul>
+<li><a href="https://saucelabs.com/platforms">https://saucelabs.com/platforms</a></li>
+<li>(in JSON form) http://saucelabs.com/rest/v1/info/browsers/webdriver</li>
+</ul></div></div><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">platforms</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{};</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">safari</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;safari&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.8&#39;</span><span class="p">,</span> <span class="s1">&#39;safari&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.6&#39;</span><span class="p">,</span> <span class="s1">&#39;safari&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">internetExplorer</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8.1&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;11&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;11&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">iOS</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;iphone&#39;</span><span class="p">,</span> <span class="s1">&#39;7.1&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;ipad&#39;</span><span class="p">,</span> <span class="s1">&#39;7.1&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.8&#39;</span><span class="p">,</span> <span class="s1">&#39;iphone&#39;</span><span class="p">,</span> <span class="s1">&#39;6.1&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.8&#39;</span><span class="p">,</span> <span class="s1">&#39;ipad&#39;</span><span class="p">,</span> <span class="s1">&#39;6.1&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">android</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.4&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.3&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.1&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.0&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">firefox</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;31&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;30&#39;</span><span class="p">],</span> <span class="c1">// newer firefox is not available on OSX</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;31&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;30&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;31&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;30&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">chrome</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;36&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;35&#39;</span><span class="p">],</span> <span class="c1">// newer chrome is not available on OSX</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;37&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;37&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 8&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;36&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;36&#39;</span><span class="p">]</span>
+<span class="p">];</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">all</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">safari</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">internetExplorer</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">iOS</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">android</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">firefox</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">platforms</span><span class="p">.</span><span class="nx">chrome</span><span class="p">);</span>
+
+<span class="nx">platforms</span><span class="p">.</span><span class="nx">cheapCoverage</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;chrome&#39;</span><span class="p">,</span> <span class="s1">&#39;36&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;firefox&#39;</span><span class="p">,</span> <span class="s1">&#39;31&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Windows 7&#39;</span><span class="p">,</span> <span class="s1">&#39;internet explorer&#39;</span><span class="p">,</span> <span class="s1">&#39;11&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;OS X 10.9&#39;</span><span class="p">,</span> <span class="s1">&#39;iphone&#39;</span><span class="p">,</span> <span class="s1">&#39;7.1&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.4&#39;</span><span class="p">],</span>
+  <span class="p">[</span><span class="s1">&#39;Linux&#39;</span><span class="p">,</span> <span class="s1">&#39;android&#39;</span><span class="p">,</span> <span class="s1">&#39;4.3&#39;</span><span class="p">]</span>
+<span class="p">];</span></div></div></div></div></body></html>

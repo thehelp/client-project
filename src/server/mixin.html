@@ -4,9 +4,18 @@
 provided by <code>thehelp-project</code>.</p></div></div><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
 
 <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;lodash&#39;</span><span class="p">);</span>
 
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">mixin</span><span class="p">(</span><span class="nx">GruntConfig</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Before we replace <code>standardSetup</code> with our version which calls <code>registerConnect</code> we
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;lodash&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">chalk</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;chalk&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">Util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./util&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">PreambleRenderer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./preamble_renderer&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">saucePlatforms</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./sauce_platforms&#39;</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">mixin</span><span class="p">(</span><span class="nx">GruntConfig</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">util</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Util</span><span class="p">();</span>
+  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">saucePlatforms</span> <span class="o">=</span> <span class="nx">saucePlatforms</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Before we replace <code>standardSetup</code> with our version which calls <code>registerConnect</code> we
 save the previous method in an array.</p></div></div><div class="code"><div class="wrapper">  <span class="kd">var</span> <span class="nx">previous</span> <span class="o">=</span>
     <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">previousSetup</span> <span class="o">=</span> <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">previousSetup</span> <span class="o">||</span> <span class="p">[];</span>
 
@@ -179,6 +188,150 @@ If specified, <code>standalone</code> versions of that library can be produced a
       <span class="nx">config</span><span class="p">.</span><span class="nx">out</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">targetPath</span><span class="p">,</span> <span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="nx">target</span> <span class="o">+</span> <span class="s1">&#39;.min.js&#39;</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">registerOptimize</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
     <span class="p">}</span>
-  <span class="p">};</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerSauce</code> pulls in the <code>grunt-saucelabs</code> package and sets up its subtask,
+<code>saucelabs-mocha</code> with a number of defaults to make it easy. It pulls values from
+'env.json' and 'package.json' in the current working directory, so if you run the
+<code>grunt</code> command from another directory than the root of your project, you'll get
+different behavior.</p>
 
+<p><em>Note: by default this plugin uses
+<a href="https://docs.saucelabs.com/reference/sauce-connect/">Sauce Connect</a> to make local URLs
+available to the Sauce Labs infrastructure. Set <code>tunneled = false</code> to disable that
+behavior.</em></p>
+
+<pre><code>config.registerSauce({
+  // required
+  urls: [
+    'can be local URLs, since sauce connect is used'
+  ],
+
+  // optional; defaults are:
+  username: 'SAUCE_USERNAME from env.json',
+  key: 'SAUCE_ACCESS_KEY from env.json',
+  testname: 'name from package.json',
+  build: 'version from package.json',
+  browsers: [
+    'a small subset of supported sauce labs platform that gives good coverage'
+  ],
+  sauceConfig: {
+    // test results are available via their unique url to anyone who has it
+    public: 'share'
+  },
+  pollInterval: 750,
+  throttling: 2
+});
+</code></pre>
+
+<p>Check <a href="sauce_platforms.js">./sauce_platforms.html</a> for more information on the sauce
+platform subsets available. <a href="https://github.com/axemclion/grunt-saucelabs#usage">More information on options you can pass to
+the <code>grunt-saucelabs</code> tasks</a></p></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerSauce</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/*jshint maxcomplexity: 13 */</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">loadLocalNpm</span><span class="p">(</span><span class="s1">&#39;grunt-saucelabs&#39;</span><span class="p">,</span> <span class="nx">__dirname</span><span class="p">);</span>
+
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+
+    <span class="kd">var</span> <span class="nx">env</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">getEnv</span><span class="p">();</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">username</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">username</span> <span class="o">||</span> <span class="nx">env</span><span class="p">.</span><span class="nx">SAUCE_USERNAME</span><span class="p">;</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">key</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">key</span> <span class="o">||</span> <span class="nx">env</span><span class="p">.</span><span class="nx">SAUCE_ACCESS_KEY</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nx">pkg</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">pkg</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">getPkg</span><span class="p">();</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">testname</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">testname</span> <span class="o">||</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">build</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">build</span> <span class="o">||</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">browsers</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">browsers</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">saucePlatforms</span><span class="p">.</span><span class="nx">cheapCoverage</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">urls</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Need to provide the urls to test!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">sauceConfig</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">sauceConfig</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">sauceConfig</span><span class="p">.</span><span class="kr">public</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">sauceConfig</span><span class="p">.</span><span class="kr">public</span> <span class="o">||</span> <span class="s1">&#39;share&#39;</span><span class="p">;</span>
+
+    <span class="nx">options</span><span class="p">.</span><span class="nx">pollInterval</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">pollInternval</span> <span class="o">||</span> <span class="mi">750</span><span class="p">;</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">throttled</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">throttled</span> <span class="o">||</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="s1">&#39;saucelabs-mocha&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="nx">options</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;sauce&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;saucelabs-mocha&#39;</span><span class="p">]);</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><code>registerPreambleForDist</code> installs a task called 'preamble-for-dist' which injects
+project version/license/author information into the top of files in the dist folder. By
+default, it applies to all javascript files under your project 'dist' directory.</p>
+
+<p>It will attempt to load your project's 'package.json' by loading the file by that name
+at <code>process.cwd()</code>. You can override this lookup by providing your own <code>pkg</code> object on
+<code>options</code>. Otherwise, be careful where you run the <code>grunt</code> command.</p>
+
+<pre><code>grunt.registerPreambleForDist({
+  // this key will override package.json from disk
+  pkg: {
+    // these keys are required, either from pkg or from your package.json
+    name: 'project-name',
+    version: '1.4',
+    homepage: 'http://my.homepage',
+    author: 'Someone',
+
+    // optional; both contributor formats supported
+    contributors: [
+      'Person 1 &lt;email&gt;',
+      {name: 'Person', email: 'email'}
+    ],
+
+    // only required if no LICENSE.txt is found and licenseContent not provided
+    license: 'a short name, like MIT'
+  },
+
+  // optional; the set of files to process
+  src: ['dist/js/public/*.js', 'dist/library.css'],
+
+  // optional; overrides LICENSE.text from working directory
+  licenseContent: 'complete license text',
+
+  // optional
+  comments: {
+    library1: 'Library 1 uses components from X, Y and X packages.',
+    '*': 'This project is a labor of love'
+  }
+});
+</code></pre>
+
+<p><em>Note: keys in the <code>comments</code> object are regular expressions. If a file matches more
+than one key, each message will be included.</em></p></div></div><div class="code"><div class="wrapper">  <span class="nx">GruntConfig</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">registerPreambleForDist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">grunt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PreambleRenderer</span><span class="p">({</span>
+      <span class="nx">util</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">util</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerMultiTask</span><span class="p">(</span><span class="s1">&#39;preamble-for-dist&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">files</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">filesSrc</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">();</span>
+
+      <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+      <span class="nx">options</span><span class="p">.</span><span class="nx">date</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">date</span> <span class="o">||</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+
+      <span class="nx">_</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">files</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">contents</span> <span class="o">=</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">file</span><span class="p">);</span>
+
+        <span class="nx">contents</span> <span class="o">=</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">go</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="o">+</span> <span class="nx">contents</span><span class="p">;</span>
+
+        <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span> <span class="nx">contents</span><span class="p">);</span>
+
+        <span class="nx">grunt</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">writeln</span><span class="p">(</span><span class="s1">&#39;File &#39;</span> <span class="o">+</span> <span class="nx">chalk</span><span class="p">.</span><span class="nx">cyan</span><span class="p">(</span><span class="nx">file</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; updated.&#39;</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">src</span> <span class="o">||</span> <span class="p">[</span><span class="s1">&#39;dist/**/*.js&#39;</span><span class="p">];</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">grunt</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="s1">&#39;preamble-for-dist&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">src</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">src</span><span class="p">,</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="nx">options</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
 <span class="p">};</span></div></div></div></div></body></html>

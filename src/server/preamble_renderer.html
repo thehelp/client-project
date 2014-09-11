@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en"><head><title>src/server/preamble_renderer</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="src/server/preamble_renderer"><meta name="groc-project-path" content="src/server/preamble_renderer.js"><meta name="groc-github-url" content="https://github.com/thehelp/client-project"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/thehelp/client-project/blob/master/src/server/preamble_renderer.js">src/server/preamble_renderer.js</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="preamblerenderer">PreambleRenderer</h1>
+
+<p>The logic for rendering a complete file premble, split out into bite-sized chunks.</p></div></div><div class="code"><div class="wrapper"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;lodash&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">Util</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./util&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">PreambleRenderer</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">util</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">util</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">Util</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">PreambleRenderer</span><span class="p">;</span>
+
+<span class="nx">PreambleRenderer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">renderComments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">comments</span><span class="p">,</span> <span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">comments</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">_</span><span class="p">(</span><span class="nx">comments</span><span class="p">).</span><span class="nx">keys</span><span class="p">().</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">file</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">result</span> <span class="o">+=</span> <span class="nx">comments</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;\n\n&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">PreambleRenderer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">renderContributors</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">contributors</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">contributors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">+=</span> <span class="s1">&#39;Contributors:\n&#39;</span><span class="p">;</span>
+    <span class="nx">_</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">contributors</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">contributor</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">contributor</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">result</span> <span class="o">+=</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="nx">contributor</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">result</span> <span class="o">+=</span> <span class="s1">&#39;  &#39;</span> <span class="o">+</span> <span class="nx">contributor</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; &lt;&#39;</span> <span class="o">+</span> <span class="nx">contributor</span><span class="p">.</span><span class="nx">email</span> <span class="o">+</span> <span class="s1">&#39;&gt;\n&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">PreambleRenderer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">renderLicense</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">licenseName</span><span class="p">,</span> <span class="nx">licenseContent</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">licenseContent</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">getLicenseContent</span><span class="p">();</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;\n\n&#39;</span> <span class="o">+</span> <span class="nx">content</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;\nLicense: https://spdx.org/licenses/&#39;</span> <span class="o">+</span> <span class="nx">licenseName</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">PreambleRenderer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">go</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">file</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">pkg</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">pkg</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">getPkg</span><span class="p">();</span>
+
+  <span class="nx">result</span> <span class="o">+=</span>
+    <span class="s1">&#39;/*&#39;</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span> <span class="o">+</span>
+    <span class="nx">pkg</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; v&#39;</span> <span class="o">+</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">version</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span> <span class="o">+</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">date</span> <span class="o">+</span> <span class="s1">&#39;\n\n&#39;</span><span class="p">;</span>
+
+  <span class="nx">result</span> <span class="o">+=</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">homepage</span> <span class="o">+</span> <span class="s1">&#39;\n\n&#39;</span><span class="p">;</span>
+
+  <span class="nx">result</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderComments</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">comments</span><span class="p">,</span> <span class="nx">file</span><span class="p">);</span>
+
+  <span class="nx">result</span> <span class="o">+=</span>
+    <span class="s1">&#39;Author: &#39;</span> <span class="o">+</span> <span class="nx">pkg</span><span class="p">.</span><span class="nx">author</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">;</span>
+
+  <span class="nx">result</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderContributors</span><span class="p">(</span><span class="nx">pkg</span><span class="p">.</span><span class="nx">contributors</span><span class="p">);</span>
+
+  <span class="nx">result</span> <span class="o">+=</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderLicense</span><span class="p">(</span><span class="nx">pkg</span><span class="p">.</span><span class="nx">license</span><span class="p">,</span> <span class="nx">options</span><span class="p">.</span><span class="nx">licenseContent</span><span class="p">);</span>
+
+  <span class="nx">result</span> <span class="o">+=</span> <span class="s1">&#39;*/\n\n&#39;</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span></div></div></div></div></body></html>

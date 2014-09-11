@@ -8,18 +8,20 @@
 <li><a href="https://github.com/gruntjs/grunt-contrib-connect"><code>connect</code></a> task to serve static files on localhost instead of <code>file:/</code> URLs, which have different security settings</li>
 <li><a href="https://github.com/kmiyashiro/grunt-mocha"><code>grunt-mocha</code></a> to run your <em>client-side</em> <code>mocha</code> tests on the command-line via <a href="http://phantomjs.org/"><code>phantomjs</code></a></li>
 <li><a href="https://github.com/asciidisco/grunt-requirejs"><code>grunt-requirejs</code></a> to concatenate and optimize your AMD-style modules into production javascript files.</li>
+<li><a href="https://github.com/axemclion/grunt-saucelabs"><code>grunt-saucelabs</code></a> to run tests on multiple browsers via <a href="https://saucelabs.com">Sauce Labs</a></li>
+<li>'preamble-for-dist' task to add version number, author, and license information into final distribution files</li>
 </ul>
 
 <h2 id="setup">Setup</h2>
 
 <p>First, install the project (and its friend, <a href="https://github.com/thehelp/project"><code>thehelp-project</code></a>) as dev dependencies:</p>
 
-<pre><code>npm install thehelp-project thehelp-client-project --save-dev
+<pre><code class="bash">npm install thehelp-project thehelp-client-project --save-dev
 </code></pre>
 
 <p>If you're new to <code>thehelp-project</code>, it would be good to read <a href="https://github.com/thehelp/project">its docs</a> first. Then make sure you have the grunt command available:</p>
 
-<pre><code>npm install -g grunt-cli
+<pre><code class="bash">npm install -g grunt-cli
 </code></pre>
 
 <h2 id="your-gruntfile">Your Gruntfile</h2>
@@ -116,6 +118,16 @@ module.exports = function(grunt) {
 <li><a href="https://github.com/asciidisco/grunt-requirejs"><code>grunt-requirejs</code> documentation</a></li>
 </ul>
 
+<h3 id="add-preamble">Add Preamble</h3>
+
+<p>Now that you've generated some concatenated and/or optimized files for distribution, you probably want to make sure that people know where the files came from:</p>
+
+<pre><code class="javascript">config.registerPreambleForDist();
+config.registerTask('dist', ['requirejs', 'preamble-for-dist']);
+</code></pre>
+
+<p>Elements from your package.json will be injected into javascript files under your dist subdirectory. It will also look for a file LICENSE.txt in your project's root directory to include. And you can add comments to various subsets of your dist files with <code>options.comments</code>. More options and details are available at <a href="http://thehelp.github.io/client-project/src/server/mixin.html">the detailed documentation.</a></p>
+
 <h3 id="test">Test</h3>
 
 <p>Another two methods make it easy to automate your client-side testing.</p>
@@ -140,15 +152,54 @@ grunt.registerTask('client-test', ['connect:test', 'mocha']);
 
 <p><em>Note: the registered <code>connect:test</code> task runs the server on port 3001. The <code>connect:keepalive</code> task is useful for manual browser-based debugging, and runs on port 3000. This is so you can run grunt test runs while also keeping a server up for your browser-based testing.</em></p>
 
+<h3 id="test-on-multiple-browsers">Test on multiple browsers</h3>
+
+<p>To get your tests running on multiple browers via the Sauce Labs service, first set two environment variables with information about your account. <code>thehelp-project</code> prefers to put them in 'env.json' in your project's root directory:</p>
+
+<pre><code class="json">{
+  "SAUCE_USERNAME": "your_username",
+  "SAUCE_ACCESS_KEY": "your_key"
+}
+</code></pre>
+
+<p>It's likely that you don't want to deploy your files to a publically-accessible server every new build for Sauce Labs, so they've provided <a href="https://docs.saucelabs.com/reference/sauce-connect/">Sauce Labs Connect</a>. It opens a secure tunnel to your machine, giving their services access to ports on your machine. Yes, they take security seriously - they get into the details on the download page.</p>
+
+<p>Once you've got those two things in place, a lot of defaults have been provided for you. This will set things up to run on a minimum set of browsers with reasonable coverage:</p>
+
+<pre><code class="javascript">config.registerSauce({
+  urls: [
+    'http://localhost:3001/test/integration/dist.html'
+  ]
+});
+grunt.registerTask('cross-browser', ['connect:test', 'sauce']);
+</code></pre>
+
+<p>Various browser subsets are available via <code>config.saucePlatforms</code>: <code>iOS</code>, <code>chrome</code>,
+<code>internetExplorer</code>, etc. <a href="http://thehelp.github.io/client-project/src/server/sauce_platforms.html">(complete list of browser subsets).</a> Just set the <code>browsers</code> key of the <code>options</code> you pass to <code>registerSauce()</code>. Check out the additional configuration available at the...</p>
+
 <h2 id="detailed-documentation">Detailed Documentation</h2>
 
 <p>Detailed docs be found at this project's GitHub Pages, thanks to <code>groc</code>: <a href="http://thehelp.github.io/client-project/src/server/mixin.html">http://thehelp.github.io/client-project/src/server/mixin.html</a></p>
+
+<h2 id="contributing-changes">Contributing changes</h2>
+
+<p>The comprehensive integration test under 'test/default' will be your friend. <code>./run.sh</code> and <code>./clean.sh</code> will test most of it, but you'll want to visually inspect the dist/js files to ensure that the 'preamble-for-dist' task is doing what it should. The 'cross-browser' task will verify that Sauce Labs integration is still working - you'll need to put your Sauce Labs account information in an env.json file in that directory.</p>
+
+<p>When you have some changes ready, please submit a pull request with:</p>
+
+<ul>
+<li>Justification - why is this change worthwhile? Link to issues, use code samples, etc.</li>
+<li>Documentation changes for your code updates. Be sure to check the groc-generated HTML with <code>grunt doc</code></li>
+<li>A description of how you tested the change. Don't forget about the very-useful <code>npm link</code> command :0)</li>
+</ul>
+
+<p>I may ask you to use a <code>git rebase</code> to ensure that your commits are not interleaved with commits already in the history. And of course, make sure <code>grunt</code> completes successfully. :0)</p>
 
 <h2 id="license">License</h2>
 
 <p>(The MIT License)</p>
 
-<p>Copyright (c) 2013 Scott Nonnenberg &lt;scott@nonnenberg.com&gt;</p>
+<p>Copyright (c) 2014 Scott Nonnenberg &lt;scott@nonnenberg.com&gt;</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
