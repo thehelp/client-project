@@ -189,7 +189,7 @@ When you have some changes ready, please submit a pull request with:
 
 * Justification - why is this change worthwhile? Link to issues, use code samples, etc.
 * Documentation changes for your code updates. Be sure to check the groc-generated HTML with `grunt doc`
-* A description of how you tested the change
+* A description of how you tested the change. Don't forget about the very-useful `npm link` command :0)
 
 I may ask you to use a `git rebase` to ensure that your commits are not interleaved with commits already in the history. And of course, make sure `grunt` completes successfully. :0)
 
