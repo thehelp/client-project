@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/thehelp/client-project.svg?branch=master)](https://travis-ci.org/thehelp/client-project)
+
 # thehelp-client-project
 
 Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with [`mocha`](http://visionmedia.github.io/mocha/)? This easy-to-set-up library will streamline your project automation.
