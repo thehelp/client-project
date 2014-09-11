@@ -181,6 +181,18 @@ Various browser subsets are available via `config.saucePlatforms`: `iOS`, `chrom
 
 Detailed docs be found at this project's GitHub Pages, thanks to `groc`: [http://thehelp.github.io/client-project/src/server/mixin.html](http://thehelp.github.io/client-project/src/server/mixin.html)
 
+## Contributing changes
+
+The comprehensive integration test under 'test/default' will be your friend. `./run.sh` and `./clean.sh` will test most of it, but you'll want to visually inspect the dist/js files to ensure that the 'preamble-for-dist' task is doing what it should. The 'cross-browser' task will verify that Sauce Labs integration is still working - you'll need to put your Sauce Labs account information in an env.json file in that directory.
+
+When you have some changes ready, please submit a pull request with:
+
+* Justification - why is this change worthwhile? Link to issues, use code samples, etc.
+* Documentation changes for your code updates. Be sure to check the groc-generated HTML with `grunt doc`
+* A description of how you tested the change
+
+I may ask you to use a `git rebase` to ensure that your commits are not interleaved with commits already in the history. And of course, make sure `grunt` completes successfully. :0)
+
 ## License
 
 (The MIT License)
