@@ -8,7 +8,7 @@ Developing client-side javascript with [`requirejs`](http://requirejs.org/) and 
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
 * [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your AMD-style modules into production javascript files.
 * [`grunt-saucelabs`](https://github.com/axemclion/grunt-saucelabs) to run tests on multiple browsers via [Sauce Labs](https://saucelabs.com)
-* 'preamble-for-dist' task to add version number, author, and license information into final distrubition files
+* 'preamble-for-dist' task to add version number, author, and license information into final distribution files
 
 ## Setup
 
