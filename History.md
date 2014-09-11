@@ -1,3 +1,8 @@
+## 0.4.0 (2014-09-10)
+
+* `grunt-saucelabs` now included with install, set up with `GruntConfig.registerSauce()`
+* New 'preamble-for-dist' multi-task to add version number, author, and license information into dist js files. Set up with `GruntConfig.registerPreambleForDist()`
+
 ## 0.3.0 (2014-08-28)
 
 * Breaking: removed `registerCopyFromDist()` and `registerCopyFromBower()`; no real need to copy into local repo. Will do it on a case-by-case basis when a project requires a build step.
