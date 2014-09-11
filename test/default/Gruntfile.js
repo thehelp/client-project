@@ -13,6 +13,7 @@ module.exports = function(grunt) {
   config.standardDefault();
 
   internals.setupClientTesting(config, grunt);
+  internals.setupCrossBrowser(config, grunt);
   internals.setupDist(config, grunt);
 };
 
@@ -27,6 +28,16 @@ internals.setupClientTesting = function(config, grunt) {
   });
 
   grunt.registerTask('client-test', ['connect:test', 'mocha']);
+};
+
+internals.setupCrossBrowser = function(config, grunt) {
+  config.registerSauce({
+    urls: [
+      'http://localhost:3001/test/integration/basic.html'
+    ]
+  });
+
+  grunt.registerTask('cross-browser', ['connect:test', 'sauce']);
 };
 
 internals.setupDist = function(config, grunt) {
@@ -52,5 +63,7 @@ internals.setupDist = function(config, grunt) {
     config: requireJsConfig
   });
 
-  grunt.registerTask('dist', ['requirejs']);
+  config.registerPreambleForDist();
+
+  grunt.registerTask('dist', ['requirejs', 'preamble-for-dist']);
 };

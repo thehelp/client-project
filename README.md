@@ -7,6 +7,8 @@ Developing client-side javascript with [`requirejs`](http://requirejs.org/) and 
 * [`connect`](https://github.com/gruntjs/grunt-contrib-connect) task to serve static files on localhost instead of `file:/` URLs, which have different security settings
 * [`grunt-mocha`](https://github.com/kmiyashiro/grunt-mocha) to run your _client-side_ `mocha` tests on the command-line via [`phantomjs`](http://phantomjs.org/)
 * [`grunt-requirejs`](https://github.com/asciidisco/grunt-requirejs) to concatenate and optimize your AMD-style modules into production javascript files.
+* [`grunt-saucelabs`](https://github.com/axemclion/grunt-saucelabs) to run tests on multiple browsers via [Sauce Labs](https://saucelabs.com)
+* 'preamble-for-dist' task to add version number, author, and license information into final distrubition files
 
 ## Setup
 
@@ -114,6 +116,17 @@ For more information on requirejs configuration see the integration test include
 * [`requirejs` complete example configuration](https://github.com/jrburke/r.js/blob/master/build/example.build.js)
 * [`grunt-requirejs` documentation](https://github.com/asciidisco/grunt-requirejs)
 
+### Add Preamble
+
+Now that you've generated some concatenated and/or optimized files for distribution, you probably want to make sure that people know where the files came from:
+
+```javascript
+config.registerPreambleForDist();
+config.registerTask('dist', ['requirejs', 'preamble-for-dist']);
+```
+
+Elements from your package.json will be injected into javascript files under your dist subdirectory. It will also look for a file LICENSE.txt in your project's root directory to include. And you can add comments to various subsets of your dist files with `options.comments`. More options and details are available at [the detailed documentation.](http://thehelp.github.io/client-project/src/server/mixin.html)
+
 ### Test
 
 Another two methods make it easy to automate your client-side testing.
@@ -137,6 +150,33 @@ The default configuration expects that your tests will start whenever they are r
 
 _Note: the registered `connect:test` task runs the server on port 3001. The `connect:keepalive` task is useful for manual browser-based debugging, and runs on port 3000. This is so you can run grunt test runs while also keeping a server up for your browser-based testing._
 
+### Test on multiple browsers
+
+To get your tests running on multiple browers via the Sauce Labs service, first set two environment variables with information about your account. `thehelp-project` prefers to put them in 'env.json' in your project's root directory:
+
+```json
+{
+  "SAUCE_USERNAME": "your_username",
+  "SAUCE_ACCESS_KEY": "your_key"
+}
+```
+
+It's likely that you don't want to deploy your files to a publically-accessible server every new build for Sauce Labs, so they've provided [Sauce Labs Connect](https://docs.saucelabs.com/reference/sauce-connect/). It opens a secure tunnel to your machine, giving their services access to ports on your machine. Yes, they take security seriously - they get into the details on the download page.
+
+Once you've got those two things in place, a lot of defaults have been provided for you. This will set things up to run on a minimum set of browsers with reasonable coverage:
+
+```javascript
+config.registerSauce({
+  urls: [
+    'http://localhost:3001/test/integration/dist.html'
+  ]
+});
+grunt.registerTask('cross-browser', ['connect:test', 'sauce']);
+```
+
+Various browser subsets are available via `config.saucePlatforms`: `iOS`, `chrome`,
+`internetExplorer`, etc. [(complete list of browser subsets).](http://thehelp.github.io/client-project/src/server/sauce_platforms.html) Just set the `browsers` key of the `options` you pass to `registerSauce()`. Check out the additional configuration available at the...
+
 ## Detailed Documentation
 
 Detailed docs be found at this project's GitHub Pages, thanks to `groc`: [http://thehelp.github.io/client-project/src/server/mixin.html](http://thehelp.github.io/client-project/src/server/mixin.html)
@@ -145,7 +185,7 @@ Detailed docs be found at this project's GitHub Pages, thanks to `groc`: [http:/
 
 (The MIT License)
 
-Copyright (c) 2013 Scott Nonnenberg &lt;scott@nonnenberg.com&gt;
+Copyright (c) 2014 Scott Nonnenberg &lt;scott@nonnenberg.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

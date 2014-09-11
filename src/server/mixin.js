@@ -8,9 +8,18 @@ provided by `thehelp-project`.
 'use strict';
 
 var path = require('path');
+
 var _ = require('lodash');
+var chalk = require('chalk');
+
+var Util = require('./util');
+var PreambleRenderer = require('./preamble_renderer');
+var saucePlatforms = require('./sauce_platforms');
 
 module.exports = function mixin(GruntConfig) {
+
+  GruntConfig.prototype.util = new Util();
+  GruntConfig.prototype.saucePlatforms = saucePlatforms;
 
   // Before we replace `standardSetup` with our version which calls `registerConnect` we
   // save the previous method in an array.
@@ -204,4 +213,162 @@ module.exports = function mixin(GruntConfig) {
     }
   };
 
+  /*
+  `registerSauce` pulls in the `grunt-saucelabs` package and sets up its subtask,
+  `saucelabs-mocha` with a number of defaults to make it easy. It pulls values from
+  'env.json' and 'package.json' in the current working directory, so if you run the
+  `grunt` command from another directory than the root of your project, you'll get
+  different behavior.
+
+  _Note: by default this plugin uses
+  [Sauce Connect](https://docs.saucelabs.com/reference/sauce-connect/) to make local URLs
+  available to the Sauce Labs infrastructure. Set `tunneled = false` to disable that
+  behavior._
+
+  ```
+  config.registerSauce({
+    // required
+    urls: [
+      'can be local URLs, since sauce connect is used'
+    ],
+
+    // optional; defaults are:
+    username: 'SAUCE_USERNAME from env.json',
+    key: 'SAUCE_ACCESS_KEY from env.json',
+    testname: 'name from package.json',
+    build: 'version from package.json',
+    browsers: [
+      'a small subset of supported sauce labs platform that gives good coverage'
+    ],
+    sauceConfig: {
+      // test results are available via their unique url to anyone who has it
+      public: 'share'
+    },
+    pollInterval: 750,
+    throttling: 2
+  });
+  ```
+
+  Check [./sauce_platforms.html](sauce_platforms.js) for more information on the sauce
+  platform subsets available. [More information on options you can pass to
+  the `grunt-saucelabs` tasks](https://github.com/axemclion/grunt-saucelabs#usage)
+
+  */
+  GruntConfig.prototype.registerSauce = function(options) {
+    /*jshint maxcomplexity: 13 */
+
+    this.loadLocalNpm('grunt-saucelabs', __dirname);
+
+    options = options || {};
+
+    var env = this.util.getEnv();
+    options.username = options.username || env.SAUCE_USERNAME;
+    options.key = options.key || env.SAUCE_ACCESS_KEY;
+
+    var pkg = options.pkg || this.util.getPkg();
+    options.testname = options.testname || pkg.name;
+    options.build = options.build || pkg.version;
+
+    options.browsers = options.browsers || this.saucePlatforms.cheapCoverage;
+
+    if (!options.urls) {
+      throw new Error('Need to provide the urls to test!');
+    }
+
+    options.sauceConfig = options.sauceConfig || {};
+    options.sauceConfig.public = options.sauceConfig.public || 'share';
+
+    options.pollInterval = options.pollInternval || 750;
+    options.throttled = options.throttled || 2;
+
+    this.grunt.config('saucelabs-mocha', {
+      default: {
+        options: options
+      }
+    });
+
+    this.grunt.registerTask('sauce', ['saucelabs-mocha']);
+  };
+
+  /*
+  `registerPreambleForDist` installs a task called 'preamble-for-dist' which injects
+  project version/license/author information into the top of files in the dist folder. By
+  default, it applies to all javascript files under your project 'dist' directory.
+
+  It will attempt to load your project's 'package.json' by loading the file by that name
+  at `process.cwd()`. You can override this lookup by providing your own `pkg` object on
+  `options`. Otherwise, be careful where you run the `grunt` command.
+
+  ```
+  grunt.registerPreambleForDist({
+    // this key will override package.json from disk
+    pkg: {
+      // these keys are required, either from pkg or from your package.json
+      name: 'project-name',
+      version: '1.4',
+      homepage: 'http://my.homepage',
+      author: 'Someone',
+
+      // optional; both contributor formats supported
+      contributors: [
+        'Person 1 <email>',
+        {name: 'Person', email: 'email'}
+      ],
+
+      // only required if no LICENSE.txt is found and licenseContent not provided
+      license: 'a short name, like MIT'
+    },
+
+    // optional; the set of files to process
+    src: ['dist/js/public/*.js', 'dist/library.css'],
+
+    // optional; overrides LICENSE.text from working directory
+    licenseContent: 'complete license text',
+
+    // optional
+    comments: {
+      library1: 'Library 1 uses components from X, Y and X packages.',
+      '*': 'This project is a labor of love'
+    }
+  });
+  ```
+
+  _Note: keys in the `comments` object are regular expressions. If a file matches more
+  than one key, each message will be included._
+
+  */
+  GruntConfig.prototype.registerPreambleForDist = function(options) {
+    var grunt = this.grunt;
+    var renderer = new PreambleRenderer({
+      util: this.util
+    });
+
+    grunt.registerMultiTask('preamble-for-dist', function() {
+      var files = this.filesSrc;
+      var options = this.options();
+
+      options = options || {};
+      options.date = options.date || new Date();
+
+      _.forEach(files, function(file) {
+        var contents = grunt.file.read(file);
+
+        contents = renderer.go(file, options) + contents;
+
+        grunt.file.write(file, contents);
+
+        grunt.log.writeln('File ' + chalk.cyan(file) + ' updated.');
+      });
+    });
+
+    options = options || {};
+    options.src = options.src || ['dist/**/*.js'];
+
+    this.grunt.config('preamble-for-dist', {
+      default: {
+        src: options.src,
+        options: options
+      }
+    });
+  };
 };
