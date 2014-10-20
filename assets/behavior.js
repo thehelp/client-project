@@ -16,13 +16,16 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
         "projectPath": "README.md",
         "targetPath": "index",
         "pageTitle": "index",
-        "firstHeader": {
+        "title": "index"
+      },
+      "depth": 1,
+      "outline": [
+        {
           "type": "heading",
           "data": {
             "level": 1,
             "title": "thehelp-client-project",
-            "slug": "thehelp-client-project",
-            "isFileHeader": true
+            "slug": "thehelp-client-project"
           },
           "depth": 1,
           "children": [
@@ -119,102 +122,6 @@ f.event={add:function(a,c,d,e,g){var h,i,j,k,l,m,n,o,p,q,r,s;if(!(a.nodeType===3
               "depth": 2
             }
           ]
-        },
-        "title": "thehelp-client-project"
-      },
-      "depth": 1,
-      "outline": [
-        {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Features",
-            "slug": "features"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Setup",
-            "slug": "setup"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Your Gruntfile",
-            "slug": "your-gruntfile"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Usage",
-            "slug": "usage"
-          },
-          "depth": 2,
-          "children": [
-            {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Optimize",
-                "slug": "optimize"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Add Preamble",
-                "slug": "add-preamble"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Test",
-                "slug": "test"
-              },
-              "depth": 3
-            }, {
-              "type": "heading",
-              "data": {
-                "level": 3,
-                "title": "Test on multiple browsers",
-                "slug": "test-on-multiple-browsers"
-              },
-              "depth": 3
-            }
-          ]
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Detailed Documentation",
-            "slug": "detailed-documentation"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "Contributing changes",
-            "slug": "contributing-changes"
-          },
-          "depth": 2
-        }, {
-          "type": "heading",
-          "data": {
-            "level": 2,
-            "title": "License",
-            "slug": "license"
-          },
-          "depth": 2
         }
       ]
     }, {
