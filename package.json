@@ -6,7 +6,7 @@
   "dependencies": {
     "chalk": "0.5.1",
     "grunt-contrib-connect": "0.8.0",
-    "grunt-mocha": "0.4.11",
+    "grunt-mocha": "0.4.12",
     "grunt-requirejs": "0.4.2",
     "grunt-saucelabs": "8.3.2",
     "lodash": "2.x"
@@ -19,7 +19,7 @@
     "chai": "1.9.1",
     "grunt": "0.4.5",
     "sinon": "1.10.3",
-    "thehelp-project": "3.3.1"
+    "thehelp-project": "3.4.1"
   },
 
   "scripts": {
