@@ -19,12 +19,15 @@ PreambleRenderer.prototype.renderComments = function(comments, file) {
   var result = '';
 
   if (comments) {
-    _(comments).keys().forEach(function(key) {
-      var r = new RegExp(key);
-      if (r.test(file)) {
-        result += comments[key] + '\n\n';
-      }
-    });
+    _(comments)
+      .keys()
+      .forEach(function(key) {
+        var r = new RegExp(key);
+        if (r.test(file)) {
+          result += comments[key] + '\n\n';
+        }
+      })
+      .value();
   }
 
   return result;
