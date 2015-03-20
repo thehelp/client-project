@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "amdefine": "0.1.0",
-    "chai": "1.9.1",
+    "chai": "2.1.2",
     "grunt": "0.4.5",
-    "sinon": "1.10.3",
-    "thehelp-project": "3.4.1"
+    "sinon": "1.14.1",
+    "thehelp-project": "3.5.0"
   },
 
   "scripts": {
