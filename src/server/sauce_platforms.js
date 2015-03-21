@@ -19,27 +19,25 @@ Sauce Labs current supported platforms:
 var platforms = module.exports = {};
 
 platforms.safari = [
-  ['OS X 10.9', 'safari', '7'],
-  ['OS X 10.8', 'safari', '6'],
-  ['OS X 10.6', 'safari', '5']
+  ['Mac 10.10', 'safari', '8'],
+  ['Mac 10.9', 'safari', '7'],
+  ['Mac 10.8', 'safari', '6'],
+  ['Mac 10.6', 'safari', '5']
 ];
 
 platforms.internetExplorer = [
-  ['Windows 8.1', 'internet explorer', '11'],
-  ['Windows 7', 'internet explorer', '11'],
-  ['Windows 8', 'internet explorer', '10'],
-  ['Windows 7', 'internet explorer', '10'],
-  ['Windows 7', 'internet explorer', '9']
+  ['Windows 2012 R2', 'internet explorer', '11'],
+  ['Windows 2012', 'internet explorer', '10'],
+  ['Windows 2008', 'internet explorer', '9']
 ];
 
 platforms.iOS = [
-  ['OS X 10.9', 'iphone', '7.1'],
-  ['OS X 10.9', 'ipad', '7.1'],
-  ['OS X 10.8', 'iphone', '6.1'],
-  ['OS X 10.8', 'ipad', '6.1']
+  ['Mac 10.10', 'iphone', '8.1'],
+  ['Mac 10.10', 'iphone', '7.1']
 ];
 
 platforms.android = [
+  ['Linux', 'android', '5.0'],
   ['Linux', 'android', '4.4'],
   ['Linux', 'android', '4.3'],
   ['Linux', 'android', '4.1'],
@@ -47,23 +45,19 @@ platforms.android = [
 ];
 
 platforms.firefox = [
-  ['linux', 'firefox', '31'],
-  ['OS X 10.9', 'firefox', '30'], // newer firefox is not available on OSX
-  ['Windows 8', 'firefox', '31'],
-  ['Windows 8', 'firefox', '30'],
-  ['Windows 7', 'firefox', '31'],
-  ['Windows 7', 'firefox', '30']
+  ['Windows 2012 R2', 'firefox', '35'],
+  ['Windows 2012 R2', 'firefox', '36'],
+  ['Windows 2012 R2', 'firefox', '34']
 ];
 
 platforms.chrome = [
-  ['linux', 'chrome', '36'],
-  ['OS X 10.9', 'chrome', '35'], // newer chrome is not available on OSX
-  ['Windows 8', 'chrome', '37'],
-  ['Windows 7', 'chrome', '37'],
-  ['Windows 8', 'chrome', '36'],
-  ['Windows 7', 'chrome', '36']
+  ['Windows 2012 R2', 'chrome', '40'],
+  ['Windows 2012 R2', 'chrome', '39'],
+  ['Windows 2012 R2', 'chrome', '37'],
+  ['Windows 2012 R2', 'chrome', '31']
 ];
 
+// ~85-90% of global web usage per Feb 2015 statcounter.com
 platforms.all = []
   .concat(platforms.safari)
   .concat(platforms.internetExplorer)
@@ -72,11 +66,17 @@ platforms.all = []
   .concat(platforms.firefox)
   .concat(platforms.chrome);
 
+// ~75% of global web usage per Feb 2015 statcounter.com
+// only missing IE8, whoch our test infrastucture doesn't like
 platforms.cheapCoverage = [
-  ['Windows 7', 'chrome', '36'],
-  ['Windows 7', 'firefox', '31'],
-  ['Windows 7', 'internet explorer', '11'],
-  ['OS X 10.9', 'iphone', '7.1'],
-  ['Linux', 'android', '4.4'],
-  ['Linux', 'android', '4.3']
+  ['Windows 2012 R2', 'chrome', '40'],
+  ['Windows 2012 R2', 'firefox', '35'],
+  ['Windows 2012 R2', 'internet explorer', '11'],
+  ['Mac 10.10', 'iphone', '8.1'],
+  ['Windows 2012 R2', 'chrome', '39'],
+  ['Windows 2008', 'internet explorer', '9'],
+  ['Windows 2012', 'internet explorer', '10'],
+  ['Linux', 'android', '5.0'],
+  ['Linux', 'android', '4.4']
 ];
+
