@@ -66,7 +66,7 @@ platforms.all = []
   .concat(platforms.firefox)
   .concat(platforms.chrome);
 
-// ~75% of global web usage per Feb 2015 statcounter.com
+// ~75% of global usage per Feb 2015 statcounter.com (add mobile, select browser versions)
 // only missing IE8, whoch our test infrastucture doesn't like
 platforms.cheapCoverage = [
   ['Windows 2012 R2', 'chrome', '40'],
