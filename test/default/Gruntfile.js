@@ -35,6 +35,8 @@ internals.setupCrossBrowser = function(config, grunt) {
     urls: [
       'http://localhost:3001/test/integration/basic.html'
     ]
+    // ],
+    // browsers: config.saucePlatforms.all
   });
 
   grunt.registerTask('cross-browser', ['connect:test', 'sauce']);
