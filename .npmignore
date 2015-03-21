@@ -6,6 +6,8 @@ public
 
 db
 lib
+docs
+coverage
 
 .gitignore
 .npmignore
