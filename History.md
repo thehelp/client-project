@@ -1,3 +1,10 @@
+## 0.5.0 (2013-03-21)
+
+* `config.saucePlatforms.cheapCoverage` and `config.saucePlatforms.all` updated per [February 2015 statcounter data](http://gs.statcounter.com/) (select mobile browsers as well as specific browser versions, download the CSV).
+* Major version updates: `lodash` (2.x to 3.x), `chalk` (0.5.1 to 1.x)
+* Minor version updates: `grunt-contrib-connect`, `grunt-saucelabs`
+* Update dev dependencies
+
 ## 0.4.0 (2014-09-10)
 
 * `grunt-saucelabs` now included with install, set up with `GruntConfig.registerSauce()`
