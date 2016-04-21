@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/thehelp/client-project.svg?branch=master)](https://travis-ci.org/thehelp/client-project)
 
-# thehelp-client-project
+# thehelp-client-project (deprecated)
+
+_I don't expect to make any more updates to this project, but by all means continue to use it if it helps you out! Also, let's talk if you'd like to jump in and help maintain it!_
 
 Developing client-side javascript with [`requirejs`](http://requirejs.org/) and testing with [`mocha`](http://visionmedia.github.io/mocha/)? This easy-to-set-up library will streamline your project automation.
 
